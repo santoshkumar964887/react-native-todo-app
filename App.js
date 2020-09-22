@@ -24,20 +24,18 @@ export default class App extends React.Component {
   };
 
   render() {
-    var renderlist=null;
-    if(this.state.item.length>0){
-       renderlist=this.state.item.map(el=>{
-        return(
-
+    var renderlist = null;
+    if (this.state.item.length > 0) {
+      renderlist = this.state.item.map((el) => {
+        return (
           <List.Item
-          key={el.id}
-          style={styles.List}
-          title={el.data}
-          right={() => <List.Icon icon="delete" />}
-        />
-        )
-
-      })
+            key={el.id}
+            style={styles.List}
+            title={el.data}
+            right={() => <List.Icon icon="delete" />}
+          />
+        );
+      });
     }
     return (
       <View>
@@ -57,10 +55,7 @@ export default class App extends React.Component {
         >
           Press me
         </Button>
-        {
-          renderlist
-        }
-     
+        {renderlist}
       </View>
     );
   }
