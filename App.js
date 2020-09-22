@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { StyleSheet, Text, View, AsyncStorage } from "react-native";
+import { StyleSheet, Text, View, AsyncStorage,ScrollView } from "react-native";
 import { Appbar, TextInput, Button, List } from "react-native-paper";
 
 export default class App extends React.Component {
@@ -22,6 +22,18 @@ export default class App extends React.Component {
       console.log(error);
     }
   };
+  async componentDidMount() {
+    const fetchdata=JSON.parse(await AsyncStorage.getItem("mylist"))||[]
+    this.setState({
+      item: fetchdata
+    });
+    this.arr=fetchdata;
+    this.id=  this.state.item[this.state.item.length-1].id+1
+    
+  }
+  deleteButtonHandler=async()=>{
+   await AsyncStorage.removeItem("mylist");
+  }
 
   render() {
     var renderlist = null;
@@ -32,31 +44,32 @@ export default class App extends React.Component {
             key={el.id}
             style={styles.List}
             title={el.data}
-            right={() => <List.Icon icon="delete" />}
+            right={() => <List.Icon  icon="delete" />}
+            onPress={()=>this.deleteButtonHandler()}
           />
         );
       });
     }
     return (
-      <View>
+      <ScrollView style={{backgroundColor:"#797D7F"}}>
         <Appbar.Header>
-          <Appbar.Content title="TODO" subtitle="List" />
+          <Appbar.Content title="TODO List" />
         </Appbar.Header>
         <TextInput
           style={styles.textInput}
-          label="Email"
+          label="Enter list name"
           value={this.state.text}
           onChangeText={(text) => this.setState({ text: text })}
         />
         <Button
-          style={styles.textInput}
+          style={styles.button}
           mode="contained"
           onPress={() => this.storedata()}
         >
-          Press me
+         Submit
         </Button>
         {renderlist}
-      </View>
+      </ScrollView>
     );
   }
 }
@@ -69,10 +82,15 @@ const styles = StyleSheet.create({
   textInput: {
     margin: 20,
     height: 50,
+    marginBottom:10
   },
   List: {
-    margin: 20,
+    margin:10,
     backgroundColor: "#CACFD2",
     borderRadius: 3,
   },
+  button:{
+    marginLeft:20,
+    marginRight:20
+  }
 });
